@@ -13,9 +13,9 @@ def hash_password(password):
 def save_password(password, account):
     hash_value = hash_password(password)
 
-    list.append("account name = " + account + ", " + "Pass world = " + hash_value)
+    list.append("Account name = " + account + ", " + "Password = " + hash_value)
 
-    print("Mot de passe enregistré") # Enregistrement du mot de passe hash
+    print("Mot de passe enregistré") # Enregistrement du hash du mot de passe
 
 def Enregistrer():
     resp = str(input("Voulez-vous enregistrer le mot de passe ? (oui/non) : "))
