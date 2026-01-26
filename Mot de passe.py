@@ -13,7 +13,7 @@ def hash_password(password):
 def save_password(password, account):
     hash_value = hash_password(password)
 
-    list.append("Account name = " + account + ", " + "Password = " + hash_value)
+    list.append(f"Account name = {account}, Password = {hash_value}")
 
     print("Mot de passe enregistré") # Enregistrement du hash du mot de passe
 
