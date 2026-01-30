@@ -1,28 +1,55 @@
 import hashlib
+import base64
+from cryptography.fernet import Fernet, InvalidToken
+from random import randint
+from Envoie_mail import send_code
 
-# Demande à l'utilisateur d'entrer un mot de passe
-World = input("Entrez votre mot de passe : ")
-# demande nom du compte
-Account = input("Entrez le nom de votre compte : ")
-# liste pour stocker les mots de passe 
-list = []
+def pass_():
+    def password_to_key(password):
+        return base64.urlsafe_b64encode(
+            hashlib.sha256(password.encode()).digest()
+        )
 
-def hash_password(password):
-    return hashlib.sha256(password.encode("utf-8")).hexdigest() # mot de passe => hash
+    # Mot de passe choisi
+    def Generation_mot_passe():
+        b = 0
+        password = ""
+        while b < 10 :
+            a = str(randint(0,9))
+            password = password + a
+            b = b + 1
+        return password
 
-def save_password(password, account):
-    hash_value = hash_password(password)
+    password = Generation_mot_passe()
+    send_code(password)
 
-    list.append(f"Account name = {account}, Password = {hash_value}")
+    # Transformation en clé
+    key = password_to_key(password)
+    fernet = Fernet(key)
 
-    print("Mot de passe enregistré") # Enregistrement du hash du mot de passe
+    # Chiffrement
+    message = 'Access Granted'
+    encrypted = fernet.encrypt(message.encode())
+    print("Message chiffré")
 
-def Enregistrer():
-    resp = str(input("Voulez-vous enregistrer le mot de passe ? (oui/non) : "))
-    if resp == "oui":
-        save_password(World, Account)
-    if resp == "non":
-        print("Mot de passe non enregistré") # Demande d'enregistrement
+    # Demande du mot de passe
+    user_password = input("Mot de passe : ")
+    key2 = password_to_key(user_password)
+    fernet2 = Fernet(key2)
 
-Enregistrer()
-print(list)
+    # Déchiffrement
+    try:
+        decrypted = fernet2.decrypt(encrypted).decode()
+        print(decrypted)
+        return True
+    except InvalidToken:
+        print("Mot de passe incorrect !")
+        return False
+
+# Utilisation correcte
+resp = pass_()
+
+if resp == True:
+    print("OK, accès autorisé")
+else:
+    print("Accès refusé")
