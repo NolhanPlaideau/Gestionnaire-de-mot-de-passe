@@ -1,4 +1,3 @@
-# Enregistrement.py
 import os
 from Utilisation import recall, authentication
 from Pass import get_fernet
